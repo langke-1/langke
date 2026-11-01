@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>浪客 · 天刀答题助手 — 一秒出答案</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='6' width='52' height='52' rx='6' fill='%23a8231c'/%3E%3Ctext x='32' y='44' font-size='34' text-anchor='middle' fill='%23f2ecd9' font-family='KaiTi,serif'%3E浪%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --ink:#0c0d0a; --ink-2:#14150f; --paper:#f2ecd9; --paper-dim:#cfc8ad;
+  --red:#a8231c; --red-deep:#7e1a15; --gold:#c9a24a; --mist:#8a8778;
+  --line:rgba(242,236,217,.14);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink); color:var(--paper);
+  font-family:"Microsoft YaHei","PingFang SC","Helvetica Neue",sans-serif;
+  line-height:1.75; overflow-x:hidden;
+  background-image:
+    radial-gradient(1200px 500px at 50% -10%, rgba(201,162,74,.10), transparent 60%),
+    radial-gradient(900px 400px at 85% 110%, rgba(168,35,28,.10), transparent 60%);
+}
+::selection{background:var(--red);color:#fff}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+h1,h2,h3,.seal{font-family:"STKaiti","KaiTi","楷体","SimSun",serif}
+
+/* ===== 顶部 ===== */
+header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(12,13,10,.82);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+}
+.nav{display:flex;align-items:center;justify-content:space-between;height:60px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--paper)}
+.seal{
+  width:38px;height:38px;flex:none;border:1.5px solid var(--red);
+  color:var(--red);font-size:22px;display:flex;align-items:center;justify-content:center;
+  line-height:1;background:rgba(168,35,28,.08);border-radius:4px;
+}
+.brand b{font-size:19px;letter-spacing:4px;font-weight:600}
+.brand small{color:var(--mist);font-size:11px;letter-spacing:2px}
+.nav a{color:var(--paper-dim);text-decoration:none;font-size:14px;margin-left:26px;transition:color .2s}
+.nav a:hover{color:var(--gold)}
+
+/* ===== Hero ===== */
+.hero{position:relative;padding:110px 0 96px;text-align:center;overflow:hidden}
+.hero::before{
+  content:"";position:absolute;left:50%;top:40px;transform:translateX(-50%);
+  width:680px;height:680px;max-width:100%;
+  background:radial-gradient(closest-side, rgba(201,162,74,.16), transparent 70%);
+  pointer-events:none;
+}
+.hero-kicker{color:var(--gold);letter-spacing:8px;font-size:13px;margin-bottom:26px}
+.hero h1{
+  font-size:clamp(52px,9vw,104px);font-weight:700;letter-spacing:.14em;line-height:1.12;
+  text-shadow:0 4px 30px rgba(0,0,0,.6);
+}
+.hero h1 em{font-style:normal;color:var(--red);text-shadow:0 0 24px rgba(168,35,28,.55)}
+.hero-sub{margin:26px auto 0;max-width:560px;color:var(--paper-dim);font-size:16px;letter-spacing:2px}
+.hero-sub b{color:var(--paper);font-weight:600}
+
+/* 剑气装饰 */
+.blade{display:flex;align-items:center;justify-content:center;gap:14px;margin:34px auto 0;color:var(--gold);opacity:.9}
+.blade .rule{height:1px;width:70px;background:linear-gradient(90deg,transparent,var(--gold));}
+.blade .rule:last-child{background:linear-gradient(90deg,var(--gold),transparent)}
+.blade svg{display:block}
+
+/* 下载按钮 */
+.download-zone{margin-top:42px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.btn-download{
+  display:inline-flex;align-items:center;gap:12px;
+  background:linear-gradient(135deg,var(--red) 0%,var(--red-deep) 100%);
+  color:#fff;text-decoration:none;font-size:19px;font-weight:700;letter-spacing:3px;
+  padding:16px 52px;border-radius:4px;position:relative;
+  box-shadow:0 10px 34px rgba(168,35,28,.38), inset 0 1px 0 rgba(255,255,255,.18);
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+.btn-download:hover{transform:translateY(-2px);box-shadow:0 14px 42px rgba(168,35,28,.5), inset 0 1px 0 rgba(255,255,255,.18)}
+.btn-download:active{transform:translateY(0)}
+.btn-download .dl-ic{flex:none}
+.download-note{color:var(--mist);font-size:12.5px;letter-spacing:1px}
+.download-note b{color:var(--gold);font-weight:600}
+
+/* ===== 功能 ===== */
+.features{padding:84px 0 70px;border-top:1px solid var(--line);background:rgba(20,21,15,.5)}
+.sec-head{text-align:center;margin-bottom:52px}
+.sec-head h2{font-size:34px;letter-spacing:8px;color:var(--paper)}
+.sec-head p{color:var(--mist);font-size:14px;margin-top:10px;letter-spacing:2px}
+.grid{display:grid;grid-template-columns:1fr;gap:16px}
+.card{
+  border:1px solid var(--line);border-radius:8px;padding:26px 24px;
+  background:linear-gradient(180deg, rgba(242,236,217,.04), transparent);
+  position:relative;overflow:hidden;
+}
+.card::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--red),var(--gold));opacity:.7;
+}
+.card h3{font-size:20px;letter-spacing:3px;margin-bottom:10px;color:var(--paper)}
+.card h3 span{color:var(--red);margin-right:8px;font-family:inherit}
+.card p{color:var(--paper-dim);font-size:14px;letter-spacing:.5px}
+
+/* ===== 授权 ===== */
+.license{padding:70px 0;border-top:1px solid var(--line)}
+.license-box{
+  border:1px solid var(--line);border-radius:10px;padding:34px 30px;
+  background:linear-gradient(150deg, rgba(201,162,74,.07), rgba(168,35,28,.05));
+  text-align:center;max-width:760px;margin:0 auto;
+}
+.license-box h2{font-size:26px;letter-spacing:6px;margin-bottom:14px}
+.license-box p{color:var(--paper-dim);font-size:14px;letter-spacing:1px}
+.license-box .tag{
+  display:inline-block;margin:16px 6px 0;padding:5px 14px;font-size:12px;letter-spacing:2px;
+  border:1px solid var(--gold);color:var(--gold);border-radius:999px;
+}
+
+/* ===== 联系 ===== */
+.contact{padding:74px 0 84px;border-top:1px solid var(--line);text-align:center}
+.contact h2{font-size:30px;letter-spacing:8px;margin-bottom:12px}
+.contact .intro{color:var(--mist);font-size:14px;letter-spacing:1px;margin-bottom:30px}
+.qq{
+  display:inline-flex;align-items:center;gap:16px;cursor:pointer;
+  border:1px solid var(--gold);color:var(--gold);
+  font-size:26px;font-family:"STKaiti","KaiTi",serif;letter-spacing:3px;
+  padding:14px 40px;border-radius:6px;background:rgba(201,162,74,.06);
+  transition:all .2s ease;user-select:none;
+}
+.qq:hover{background:rgba(201,162,74,.14);transform:translateY(-1px)}
+.qq .copied{
+  position:absolute;margin-top:64px;font-size:12px;color:#7cc576;opacity:0;transition:opacity .25s;letter-spacing:2px;
+}
+.qq.copied-ok .copied{opacity:1}
+.qq-hint{color:var(--mist);font-size:12.5px;margin-top:14px;letter-spacing:1px}
+
+/* ===== footer ===== */
+footer{border-top:1px solid var(--line);padding:26px 0;text-align:center;color:var(--mist);font-size:12.5px;letter-spacing:1px}
+footer b{color:var(--paper-dim);font-weight:600}
+
+@media (min-width:768px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+}
+
+@media (min-width:900px){
+  .hero{padding:128px 0 110px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top">
+      <span class="seal">浪</span>
+      <span><b>浪客</b><br><small>天刀答题助手</small></span>
+    </a>
+    <nav>
+      <a href="#features">功能</a>
+      <a href="#license">授权</a>
+      <a href="#download">下载</a>
+      <a href="#contact">联系</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-kicker">快 意 江 湖 · 一 剑 封 喉</div>
+      <h1>天刀答题<em>助手</em></h1>
+      <p class="hero-sub">题目刚出现，答案已到手。<b>浪客</b>，一秒出答案。</p>
+      <div class="blade" aria-hidden="true">
+        <span class="rule"></span>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+          <path d="M14.5 2 22 9.5 14.5 17"/>
+          <path d="M22 9.5H2"/>
+          <path d="M14.5 9.5v6.5l-4 4"/>
+        </svg>
+        <span class="rule"></span>
+      </div>
+      <div class="download-zone" id="download">
+        <a class="btn-download" href="https://lanke-license-data-1326151341.cos.ap-guangzhou.myqcloud.com/lanke/浪客_安装包.exe">
+          <svg class="dl-ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 21h16"/></svg>
+          立即下载
+        </a>
+        <div class="download-note">当前版本 <b>v1.1.0</b> · 正式授权版 · 一键安装免配置</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 功能 ===== -->
+  <section class="features" id="features">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>有何本领</h2>
+        <p>四式绝学，招招实用</p>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <h3><span>壹</span>自动识题</h3>
+          <p>题目一出，答案即到，无需手动输入，开箱即用。</p>
+        </div>
+        <div class="card">
+          <h3><span>贰</span>秒出答案</h3>
+          <p>题目识别的瞬间，云端引擎同步返回答案，手速拉满。</p>
+        </div>
+        <div class="card">
+          <h3><span>叁</span>持续更新</h3>
+          <p>内置自动更新，新功能与题库修正直接推送，无需重装。</p>
+        </div>
+        <div class="card">
+          <h3><span>肆</span>正式授权</h3>
+          <p>激活码授权校验，正规服务，稳定长久，童叟无欺。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 授权 ===== -->
+  <section class="license" id="license">
+    <div class="wrap">
+      <div class="license-box">
+        <h2>正版授权 · 童叟无欺</h2>
+        <p>购买激活码即可使用：月卡 / 季卡 / 半年卡 / 年卡 / 三年卡 / 五年卡 / 十年卡，多种档位任选。</p>
+        <span class="tag">激活码授权</span>
+        <span class="tag">联网校验</span>
+        <span class="tag">稳定服务</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 联系 ===== -->
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <h2>联系浪客</h2>
+      <p class="intro">购买激活码、使用问题、功能建议，欢迎直接加 QQ</p>
+      <div class="qq" id="qqCopy" role="button" tabindex="0" aria-label="复制QQ号 1459760742">
+        QQ&nbsp;1459760742
+        <span class="copied">已复制，去加好友吧</span>
+      </div>
+      <div class="qq-hint">点击号码一键复制</div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">© 2026 <b>浪客 · 天刀答题助手</b> — 快意江湖，一秒出答案</div>
+</footer>
+
+<script>
+(function(){
+  // QQ 复制
+  var qqEl = document.getElementById('qqCopy');
+  var qq = '1459760742';
+  function copyQQ(){
+    var ok = false;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(qq).then(function(){ ok = true; done(); }, function(){ fallback(); });
+    } else { fallback(); }
+    function fallback(){
+      var ta = document.createElement('textarea');
+      ta.value = qq; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); ok = true; } catch(e){}
+      document.body.removeChild(ta);
+      if (ok) done();
+    }
+    function done(){
+      qqEl.classList.add('copied-ok');
+      setTimeout(function(){ qqEl.classList.remove('copied-ok'); }, 2000);
+    }
+  }
+  qqEl.addEventListener('click', copyQQ);
+  qqEl.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); copyQQ(); } });
+})();
+</script>
+</body>
+</html>
