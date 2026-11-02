@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://langke-1.github.io/langke/sitemap.xml
